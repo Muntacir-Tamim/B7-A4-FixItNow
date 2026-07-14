@@ -1,0 +1,38 @@
+model Category {
+  id          String  @id @default(uuid())
+  name        String  @unique @db.VarChar(255)
+  description String? @db.Text
+  icon        String?
+
+  services Service[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("categories")
+}
+
+model Service {
+  id          String        @id @default(uuid())
+  title       String        @db.VarChar(255)
+  description String        @db.Text
+  price       Float
+  location    String?       @db.VarChar(255)
+  status      ServiceStatus @default(ACTIVE)
+
+  categoryId String
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  technicianProfileId String
+  technicianProfile   TechnicianProfile @relation(fields: [technicianProfileId], references: [id], onDelete: Cascade)
+
+  bookings Booking[]
+  reviews  Review[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([categoryId])
+  @@index([technicianProfileId])
+  @@map("services")
+}
