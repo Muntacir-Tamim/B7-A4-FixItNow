@@ -1,0 +1,20 @@
+model Payment {
+  id            String          @id @default(uuid())
+  amount        Float
+  method        String?         @db.VarChar(50)
+  provider      PaymentProvider @default(STRIPE)
+  status        PaymentStatus   @default(PENDING)
+  transactionId String?         @unique
+  paidAt        DateTime?
+
+  bookingId String  @unique
+  booking   Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+
+  stripeSessionId String? @unique
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([bookingId])
+  @@map("payments")
+}
