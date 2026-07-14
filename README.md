@@ -164,8 +164,8 @@ Full schema definitions are in [`prisma/schema/`](./prisma/schema).
 ### 1. Clone & Install
 
 ```bash
-git clone <your-repo-url>
-cd fixitnow-backend
+git clone https://github.com/Muntacir-Tamim/B7-A4-FixItNow.git
+cd B7-A4-FixItNow
 npm install
 ```
 
