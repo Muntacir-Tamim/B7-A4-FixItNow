@@ -1,0 +1,585 @@
+{
+  "info": {
+    "name": "FixItNow API",
+    "description": "Complete API collection for FixItNow - Your Trusted Home Service Platform",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:5000/api", "type": "string" },
+    { "key": "accessToken", "value": "", "type": "string" },
+    { "key": "bookingId", "value": "", "type": "string" },
+    { "key": "serviceId", "value": "", "type": "string" },
+    { "key": "categoryId", "value": "", "type": "string" },
+    { "key": "technicianId", "value": "", "type": "string" },
+    { "key": "paymentId", "value": "", "type": "string" },
+    { "key": "userId", "value": "", "type": "string" }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register Customer",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/auth/register", "host": ["{{baseUrl}}"], "path": ["auth", "register"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john@example.com\",\n  \"password\": \"password123\",\n  \"phone\": \"01711223344\",\n  \"address\": \"Dhaka, Bangladesh\",\n  \"role\": \"CUSTOMER\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Register Technician",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/auth/register", "host": ["{{baseUrl}}"], "path": ["auth", "register"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Rahim Plumber\",\n  \"email\": \"rahim@example.com\",\n  \"password\": \"password123\",\n  \"phone\": \"01811223344\",\n  \"address\": \"Chittagong, Bangladesh\",\n  \"role\": \"TECHNICIAN\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "if (res.data && res.data.accessToken) {",
+                  "  pm.collectionVariables.set('accessToken', res.data.accessToken);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/auth/login", "host": ["{{baseUrl}}"], "path": ["auth", "login"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@fixitnow.com\",\n  \"password\": \"Admin@12345\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Login (Admin)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "if (res.data && res.data.accessToken) {",
+                  "  pm.collectionVariables.set('accessToken', res.data.accessToken);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/auth/login", "host": ["{{baseUrl}}"], "path": ["auth", "login"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@fixitnow.com\",\n  \"password\": \"Admin@12345\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Refresh Token",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/auth/refresh-token", "host": ["{{baseUrl}}"], "path": ["auth", "refresh-token"] }
+          }
+        },
+        {
+          "name": "Get Me",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+            "url": { "raw": "{{baseUrl}}/auth/me", "host": ["{{baseUrl}}"], "path": ["auth", "me"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Categories (Public)",
+      "item": [
+        {
+          "name": "Get All Categories",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/categories", "host": ["{{baseUrl}}"], "path": ["categories"] }
+          }
+        },
+        {
+          "name": "Get Category By ID",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/categories/{{categoryId}}", "host": ["{{baseUrl}}"], "path": ["categories", "{{categoryId}}"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Services (Public)",
+      "item": [
+        {
+          "name": "Get All Services",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/services?searchTerm=plumb&page=1&limit=10&sortBy=price&sortOrder=asc",
+              "host": ["{{baseUrl}}"],
+              "path": ["services"],
+              "query": [
+                { "key": "searchTerm", "value": "plumb" },
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "10" },
+                { "key": "sortBy", "value": "price" },
+                { "key": "sortOrder", "value": "asc" },
+                { "key": "categoryId", "value": "", "disabled": true },
+                { "key": "location", "value": "", "disabled": true },
+                { "key": "minPrice", "value": "", "disabled": true },
+                { "key": "maxPrice", "value": "", "disabled": true }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Service By ID",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/services/{{serviceId}}", "host": ["{{baseUrl}}"], "path": ["services", "{{serviceId}}"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Technicians (Public)",
+      "item": [
+        {
+          "name": "Get All Technicians",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/technicians?page=1&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["technicians"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "10" },
+                { "key": "searchTerm", "value": "", "disabled": true },
+                { "key": "location", "value": "", "disabled": true },
+                { "key": "skills", "value": "", "disabled": true }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Technician By ID (with reviews)",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/technicians/{{technicianId}}", "host": ["{{baseUrl}}"], "path": ["technicians", "{{technicianId}}"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Technician Management (Auth)",
+      "item": [
+        {
+          "name": "Create Technician Profile",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/technicians/profile", "host": ["{{baseUrl}}"], "path": ["technicians", "profile"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"bio\": \"Experienced plumber with 5 years of service\",\n  \"skills\": [\"Plumbing\", \"Pipe Fitting\", \"Drain Cleaning\"],\n  \"experience\": 5,\n  \"location\": \"Dhaka, Bangladesh\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Update Technician Profile",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/technicians/profile", "host": ["{{baseUrl}}"], "path": ["technicians", "profile"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"bio\": \"Updated bio text\",\n  \"experience\": 6\n}"
+            }
+          }
+        },
+        {
+          "name": "Update Availability",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/technicians/availability", "host": ["{{baseUrl}}"], "path": ["technicians", "availability"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"slots\": [\n    { \"day\": \"MONDAY\", \"startTime\": \"09:00\", \"endTime\": \"17:00\" },\n    { \"day\": \"TUESDAY\", \"startTime\": \"09:00\", \"endTime\": \"17:00\" },\n    { \"day\": \"WEDNESDAY\", \"startTime\": \"10:00\", \"endTime\": \"16:00\" },\n    { \"day\": \"FRIDAY\", \"startTime\": \"09:00\", \"endTime\": \"13:00\" }\n  ]\n}"
+            }
+          }
+        },
+        {
+          "name": "Create Service (Technician)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/services", "host": ["{{baseUrl}}"], "path": ["services"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Emergency Pipe Repair\",\n  \"description\": \"Fast and reliable emergency pipe repair service available 24/7\",\n  \"price\": 500,\n  \"location\": \"Dhaka, Bangladesh\",\n  \"categoryId\": \"{{categoryId}}\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Update Service (Technician)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/services/{{serviceId}}", "host": ["{{baseUrl}}"], "path": ["services", "{{serviceId}}"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"price\": 600,\n  \"description\": \"Updated description with more details about the service\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get My Bookings (Technician)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+            "url": { "raw": "{{baseUrl}}/technicians/my/bookings", "host": ["{{baseUrl}}"], "path": ["technicians", "my", "bookings"] }
+          }
+        },
+        {
+          "name": "Accept Booking",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/technicians/bookings/{{bookingId}}", "host": ["{{baseUrl}}"], "path": ["technicians", "bookings", "{{bookingId}}"] },
+            "body": { "mode": "raw", "raw": "{\n  \"status\": \"ACCEPTED\"\n}" }
+          }
+        },
+        {
+          "name": "Decline Booking",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/technicians/bookings/{{bookingId}}", "host": ["{{baseUrl}}"], "path": ["technicians", "bookings", "{{bookingId}}"] },
+            "body": { "mode": "raw", "raw": "{\n  \"status\": \"DECLINED\"\n}" }
+          }
+        },
+        {
+          "name": "Mark In Progress",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/technicians/bookings/{{bookingId}}", "host": ["{{baseUrl}}"], "path": ["technicians", "bookings", "{{bookingId}}"] },
+            "body": { "mode": "raw", "raw": "{\n  \"status\": \"IN_PROGRESS\"\n}" }
+          }
+        },
+        {
+          "name": "Mark Completed",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/technicians/bookings/{{bookingId}}", "host": ["{{baseUrl}}"], "path": ["technicians", "bookings", "{{bookingId}}"] },
+            "body": { "mode": "raw", "raw": "{\n  \"status\": \"COMPLETED\"\n}" }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Bookings (Customer)",
+      "item": [
+        {
+          "name": "Create Booking",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "if (res.data && res.data.id) {",
+                  "  pm.collectionVariables.set('bookingId', res.data.id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/bookings", "host": ["{{baseUrl}}"], "path": ["bookings"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"serviceId\": \"{{serviceId}}\",\n  \"scheduledDate\": \"2025-09-15\",\n  \"scheduledTime\": \"10:00\",\n  \"address\": \"House 10, Road 5, Dhanmondi, Dhaka\",\n  \"note\": \"Please bring extra tools\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get My Bookings (Customer)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+            "url": { "raw": "{{baseUrl}}/bookings", "host": ["{{baseUrl}}"], "path": ["bookings"] }
+          }
+        },
+        {
+          "name": "Get Booking By ID",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+            "url": { "raw": "{{baseUrl}}/bookings/{{bookingId}}", "host": ["{{baseUrl}}"], "path": ["bookings", "{{bookingId}}"] }
+          }
+        },
+        {
+          "name": "Cancel Booking",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+            "url": { "raw": "{{baseUrl}}/bookings/{{bookingId}}/cancel", "host": ["{{baseUrl}}"], "path": ["bookings", "{{bookingId}}", "cancel"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Payments (Stripe)",
+      "item": [
+        {
+          "name": "Create Payment Session",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "if (res.data && res.data.paymentUrl) {",
+                  "  console.log('Open this URL to pay:', res.data.paymentUrl);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/payments/create", "host": ["{{baseUrl}}"], "path": ["payments", "create"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"bookingId\": \"{{bookingId}}\",\n  \"provider\": \"STRIPE\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get My Payment History",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+            "url": { "raw": "{{baseUrl}}/payments", "host": ["{{baseUrl}}"], "path": ["payments"] }
+          }
+        },
+        {
+          "name": "Get Payment By ID",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+            "url": { "raw": "{{baseUrl}}/payments/{{paymentId}}", "host": ["{{baseUrl}}"], "path": ["payments", "{{paymentId}}"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Reviews",
+      "item": [
+        {
+          "name": "Create Review (after COMPLETED booking)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/reviews", "host": ["{{baseUrl}}"], "path": ["reviews"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"bookingId\": \"{{bookingId}}\",\n  \"rating\": 5,\n  \"comment\": \"Excellent service! Very professional and on time.\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Get Reviews By Service",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/reviews/service/{{serviceId}}", "host": ["{{baseUrl}}"], "path": ["reviews", "service", "{{serviceId}}"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Admin",
+      "item": [
+        {
+          "name": "Get Dashboard Stats",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+            "url": { "raw": "{{baseUrl}}/admin/stats", "host": ["{{baseUrl}}"], "path": ["admin", "stats"] }
+          }
+        },
+        {
+          "name": "Get All Users",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+            "url": {
+              "raw": "{{baseUrl}}/admin/users?page=1&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "users"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "10" },
+                { "key": "role", "value": "CUSTOMER", "disabled": true },
+                { "key": "status", "value": "ACTIVE", "disabled": true },
+                { "key": "searchTerm", "value": "", "disabled": true }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Ban User",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/admin/users/{{userId}}", "host": ["{{baseUrl}}"], "path": ["admin", "users", "{{userId}}"] },
+            "body": { "mode": "raw", "raw": "{\n  \"status\": \"BANNED\"\n}" }
+          }
+        },
+        {
+          "name": "Unban User",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/admin/users/{{userId}}", "host": ["{{baseUrl}}"], "path": ["admin", "users", "{{userId}}"] },
+            "body": { "mode": "raw", "raw": "{\n  \"status\": \"ACTIVE\"\n}" }
+          }
+        },
+        {
+          "name": "Get All Bookings (Admin)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+            "url": {
+              "raw": "{{baseUrl}}/admin/bookings?page=1&limit=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["admin", "bookings"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "10" },
+                { "key": "status", "value": "REQUESTED", "disabled": true }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get All Categories (Admin)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+            "url": { "raw": "{{baseUrl}}/admin/categories", "host": ["{{baseUrl}}"], "path": ["admin", "categories"] }
+          }
+        },
+        {
+          "name": "Create Category (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/admin/categories", "host": ["{{baseUrl}}"], "path": ["admin", "categories"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Gardening\",\n  \"description\": \"Lawn mowing, tree trimming, and garden maintenance\",\n  \"icon\": \"🌿\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Update Category (Admin)",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{accessToken}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/admin/categories/{{categoryId}}", "host": ["{{baseUrl}}"], "path": ["admin", "categories", "{{categoryId}}"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"description\": \"Updated category description\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Delete Category (Admin)",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{accessToken}}" }],
+            "url": { "raw": "{{baseUrl}}/admin/categories/{{categoryId}}", "host": ["{{baseUrl}}"], "path": ["admin", "categories", "{{categoryId}}"] }
+          }
+        }
+      ]
+    }
+  ]
+}
